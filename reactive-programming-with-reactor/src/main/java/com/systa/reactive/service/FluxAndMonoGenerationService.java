@@ -23,6 +23,14 @@ public class FluxAndMonoGenerationService {
 		
 	}
 	
+	public Flux<String> namesFluxFilterAndMap(int strLength){
+		return Flux.fromIterable(Arrays.asList("Alex", "Smith", "John", "Joe"))
+				.log()
+				.map(String :: toUpperCase)
+				.filter(s -> s.length() > strLength)
+				.map(s -> s.length() + "-" + s); // adds size of the string to the original string and creates and returns flux.
+	}
+	
 	public Mono<String> nameMono(){
 		return Mono.just("Alex").log();
 	}
