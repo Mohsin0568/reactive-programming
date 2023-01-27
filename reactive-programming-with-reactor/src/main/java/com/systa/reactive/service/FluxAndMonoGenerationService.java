@@ -31,6 +31,20 @@ public class FluxAndMonoGenerationService {
 				.map(s -> s.length() + "-" + s); // adds size of the string to the original string and creates and returns flux.
 	}
 	
+	public Flux<String> namesFluxflatMap(int strLength){
+		return Flux.fromIterable(Arrays.asList("Alex", "Smith", "John", "Joe"))
+				.log()
+				.map(String :: toUpperCase)
+				.filter(s -> s.length() > strLength)
+				.flatMap(s -> toStringArray(s));
+				
+	}
+	
+	public Flux<String> toStringArray(String name){
+		var array = name.split("");
+		return Flux.fromArray(array);
+	}
+	
 	public Mono<String> nameMono(){
 		return Mono.just("Alex").log();
 	}
