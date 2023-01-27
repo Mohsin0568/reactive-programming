@@ -16,6 +16,13 @@ public class FluxAndMonoGenerationService {
 		return Flux.fromIterable(Arrays.asList("Alex", "Smith", "John")).log().map(String :: toUpperCase);
 	}
 	
+	public Flux<String> namesFluxImmutable(){
+		var flux = Flux.fromIterable(Arrays.asList("Alex", "Smith", "John"));
+		flux.map(String :: toUpperCase); // this will not change to original flux, a new flux will be created and returned by map function.
+		return flux;
+		
+	}
+	
 	public Mono<String> nameMono(){
 		return Mono.just("Alex").log();
 	}
