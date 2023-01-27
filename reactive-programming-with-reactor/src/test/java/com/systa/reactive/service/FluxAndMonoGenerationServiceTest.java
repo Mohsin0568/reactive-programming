@@ -1,5 +1,7 @@
 package com.systa.reactive.service;
 
+import java.util.Arrays;
+
 import org.junit.jupiter.api.Test;
 
 import reactor.test.StepVerifier;
@@ -87,6 +89,16 @@ class FluxAndMonoGenerationServiceTest {
 		
 		StepVerifier.create(namesFlux)
 			.expectNext("A", "L", "E", "X", "S" ,"M", "I", "T", "H", "J", "O", "H", "N")
+			.verifyComplete();
+	}
+	
+	@Test
+	void nameMonoFlatMapTest() {
+		
+		var namesFlux = fluxAndMonoService.nameMonoFlatMap();
+		
+		StepVerifier.create(namesFlux)
+			.expectNext(Arrays.asList("A", "L", "E", "X"))
 			.verifyComplete();
 	}
 

@@ -2,6 +2,7 @@ package com.systa.reactive.service;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import reactor.core.publisher.Flux;
@@ -60,6 +61,24 @@ public class FluxAndMonoGenerationService {
 				
 	}
 	
+	public Mono<String> nameMono(){
+		return Mono.just("Alex").log();
+	}
+	
+	public Mono<List<String>> nameMonoFlatMap(){
+		
+		return Mono.just("Alex")
+			.map(String :: toUpperCase)
+			.flatMap(this :: convertStringToMonoList)
+			.log();
+	}
+	
+	public Mono<List<String>> convertStringToMonoList(String s){
+		var splitStringArray = s.split("");
+		var stringsList = Arrays.asList(splitStringArray);
+		return Mono.just(stringsList);
+	}
+	
 	public Flux<String> toStringArray(String name){
 		var array = name.split("");
 		return Flux.fromArray(array);
@@ -69,10 +88,6 @@ public class FluxAndMonoGenerationService {
 		var array = name.split("");
 		int duration = new Random().nextInt(1000);
 		return Flux.fromArray(array).delayElements(Duration.ofMillis(duration));
-	}
-	
-	public Mono<String> nameMono(){
-		return Mono.just("Alex").log();
 	}
 
 	public static void main(String[] args) {
