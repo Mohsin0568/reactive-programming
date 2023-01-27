@@ -46,7 +46,16 @@ public class FluxAndMonoGenerationService {
 		return Flux.fromIterable(Arrays.asList("Alex", "Smith", "John", "Joe"))				
 				.map(String :: toUpperCase)
 				.filter(s -> s.length() > strLength)
-				.flatMap(s -> toStringArrayWithDelay(s))
+				.flatMap(s -> toStringArrayWithDelay(s)) // flatMap doesn't maintains the order of the elements while processing elements in asynchronous fashion.
+				.log();
+				
+	}
+	
+	public Flux<String> namesFluxConcatMap(int strLength){
+		return Flux.fromIterable(Arrays.asList("Alex", "Smith", "John", "Joe"))				
+				.map(String :: toUpperCase)
+				.filter(s -> s.length() > strLength)
+				.concatMap(s -> toStringArrayWithDelay(s)) // concat map maintains the order of the elements while processing elements in asynchronous fashion.
 				.log();
 				
 	}
