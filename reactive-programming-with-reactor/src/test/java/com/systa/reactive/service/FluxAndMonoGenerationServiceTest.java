@@ -125,7 +125,23 @@ class FluxAndMonoGenerationServiceTest {
 		
 		StepVerifier.create(namesFlux)
 			.expectNext("S" ,"M", "I", "T", "H")
-			.verifyComplete();	
+			.verifyComplete();
+		
+		namesFlux = fluxAndMonoService.namesFluxTransform(6);
+		
+		StepVerifier.create(namesFlux)
+			.expectNext("default")
+			.verifyComplete();
+	}
+	
+	@Test
+	void namesFluxSwitchIfEmptyTest() {
+		
+		var namesFlux = fluxAndMonoService.namesFluxSwitchIfEmpty(6);
+		
+		StepVerifier.create(namesFlux)
+			.expectNext("D", "E", "F", "A", "U", "L", "T")
+			.verifyComplete();
 	}
 
 }

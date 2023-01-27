@@ -91,6 +91,23 @@ public class FluxAndMonoGenerationService {
 		return Flux.fromIterable(Arrays.asList("Alex", "Smith", "John", "Joe"))
 				.transform(transformFunction)
 				.flatMap(s -> toStringArray(s))
+				.defaultIfEmpty("default")
+				.log();
+				
+	}
+	
+	public Flux<String> namesFluxSwitchIfEmpty(int strLength){
+		
+		Function<Flux<String>, Flux<String>> transformFunction = flux -> flux
+				.map(String :: toUpperCase)
+				.filter(s -> s.length() > strLength)
+				.flatMap(s -> toStringArray(s));
+		
+		var defaultFlux = Flux.just("default").transform(transformFunction);
+		
+		return Flux.fromIterable(Arrays.asList("Alex", "Smith", "John", "Joe"))
+				.transform(transformFunction)
+				.switchIfEmpty(defaultFlux)
 				.log();
 				
 	}
