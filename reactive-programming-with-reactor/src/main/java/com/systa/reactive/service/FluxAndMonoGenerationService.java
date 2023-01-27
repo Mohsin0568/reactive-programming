@@ -154,6 +154,33 @@ public class FluxAndMonoGenerationService {
 		return Flux.mergeSequential(abcFlux, defFlux).log();
 	}
 	
+	public Flux<String> exploreZip(){
+		var abcFlux = Flux.just("A", "B", "C");
+		var defFlux = Flux.just("D", "E", "F");
+		return Flux.zip(abcFlux, defFlux, (a, b) -> a+b).log();
+	}
+	
+	public Flux<String> exploreZip1(){
+		var abcFlux = Flux.just("A", "B", "C");
+		var defFlux = Flux.just("D", "E", "F");
+		var _123Flux = Flux.just("1", "2", "3");
+		var _456Flux = Flux.just("4", "5", "6");
+		return Flux.zip(abcFlux, defFlux, _123Flux, _456Flux)
+				.map(t4 -> t4.getT1() + t4.getT2() + t4.getT3() + t4.getT4()).log();
+	}
+	
+	public Flux<String> exploreZipWith(){
+		var abcFlux = Flux.just("A", "B", "C");
+		var defFlux = Flux.just("D", "E", "F");
+		return abcFlux.zipWith(defFlux, (a, b) -> a+b).log();
+	}
+	
+	public Mono<String> exploreMonoZipWith(){
+		var aMono = Mono.just("A");
+		var bMono = Mono.just("B");
+		return aMono.zipWith(bMono, (a, b) -> a+b).log();
+	}
+	
 	public Mono<List<String>> convertStringToMonoList(String s){
 		var splitStringArray = s.split("");
 		var stringsList = Arrays.asList(splitStringArray);

@@ -187,5 +187,29 @@ class FluxAndMonoGenerationServiceTest {
 			.expectNext("A", "B", "C", "D", "E", "F")
 			.verifyComplete();		
 	}
+	
+	@Test
+	void exploreZipsTests() {
+		var testFlux = fluxAndMonoService.exploreZip();
+		StepVerifier.create(testFlux)
+			.expectNext("AD", "BE", "CF")
+			.verifyComplete();
+		
+		testFlux = fluxAndMonoService.exploreZip1();
+		StepVerifier.create(testFlux)
+			.expectNext("AD14", "BE25", "CF36")
+			.verifyComplete();
+		
+		testFlux = fluxAndMonoService.exploreZipWith();
+		StepVerifier.create(testFlux)
+			.expectNext("AD", "BE", "CF")
+			.verifyComplete();
+		
+		var monoFlux = fluxAndMonoService.exploreMonoZipWith();
+		StepVerifier.create(monoFlux)
+			.expectNext("AB")
+			.verifyComplete();
+		
+	}
 
 }
