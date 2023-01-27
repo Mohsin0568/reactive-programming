@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -79,6 +80,19 @@ public class FluxAndMonoGenerationService {
 			.map(String :: toUpperCase)
 			.flatMapMany(this :: toStringArray)
 			.log();
+	}
+	
+	public Flux<String> namesFluxTransform(int strLength){
+		
+		Function<Flux<String>, Flux<String>> transformFunction = flux -> flux
+				.map(String :: toUpperCase)
+				.filter(s -> s.length() > strLength);
+		
+		return Flux.fromIterable(Arrays.asList("Alex", "Smith", "John", "Joe"))
+				.transform(transformFunction)
+				.flatMap(s -> toStringArray(s))
+				.log();
+				
 	}
 	
 	public Mono<List<String>> convertStringToMonoList(String s){
