@@ -101,5 +101,15 @@ class FluxAndMonoGenerationServiceTest {
 			.expectNext(Arrays.asList("A", "L", "E", "X"))
 			.verifyComplete();
 	}
+	
+	@Test
+	void nameMonoFlatMapManyTest() {
+		
+		var namesFlux = fluxAndMonoService.nameMonoFlatMapMany();
+		
+		StepVerifier.create(namesFlux)
+			.expectNext("A", "L", "E", "X")
+			.verifyComplete();
+	}
 
 }

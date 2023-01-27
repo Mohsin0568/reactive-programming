@@ -73,6 +73,14 @@ public class FluxAndMonoGenerationService {
 			.log();
 	}
 	
+	public Flux<String> nameMonoFlatMapMany(){
+		
+		return Mono.just("Alex")
+			.map(String :: toUpperCase)
+			.flatMapMany(this :: toStringArray)
+			.log();
+	}
+	
 	public Mono<List<String>> convertStringToMonoList(String s){
 		var splitStringArray = s.split("");
 		var stringsList = Arrays.asList(splitStringArray);
