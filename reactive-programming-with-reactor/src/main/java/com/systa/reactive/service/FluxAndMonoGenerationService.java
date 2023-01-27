@@ -130,6 +130,24 @@ public class FluxAndMonoGenerationService {
 		return monoA.concatWith(monoB).log();
 	}
 	
+	public Flux<String> exploreMerge(){
+		var abcFlux = Flux.just("A", "B", "C").delayElements(Duration.ofMillis(100)); // this will process alternate elements from both flux
+		var defFlux = Flux.just("D", "E", "F").delayElements(Duration.ofMillis(125));
+		return Flux.merge(abcFlux, defFlux).log();
+	}
+	
+	public Flux<String> exploreMergeWith(){
+		var abcFlux = Flux.just("A", "B", "C").delayElements(Duration.ofMillis(100));
+		var defFlux = Flux.just("D", "E", "F").delayElements(Duration.ofMillis(125));
+		return abcFlux.mergeWith(defFlux).log();
+	}
+	
+	public Flux<String> exploreMergeWithMono(){
+		var monoA = Mono.just("A");
+		var monoB = Mono.just("B");
+		return monoA.mergeWith(monoB).log();
+	}
+	
 	public Mono<List<String>> convertStringToMonoList(String s){
 		var splitStringArray = s.split("");
 		var stringsList = Arrays.asList(splitStringArray);
