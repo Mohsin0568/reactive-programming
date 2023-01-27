@@ -148,6 +148,12 @@ public class FluxAndMonoGenerationService {
 		return monoA.mergeWith(monoB).log();
 	}
 	
+	public Flux<String> exploreMergeSequential(){
+		var abcFlux = Flux.just("A", "B", "C").delayElements(Duration.ofMillis(1000)); // this will process alternate elements from both flux
+		var defFlux = Flux.just("D", "E", "F").delayElements(Duration.ofMillis(1250));
+		return Flux.mergeSequential(abcFlux, defFlux).log();
+	}
+	
 	public Mono<List<String>> convertStringToMonoList(String s){
 		var splitStringArray = s.split("");
 		var stringsList = Arrays.asList(splitStringArray);
