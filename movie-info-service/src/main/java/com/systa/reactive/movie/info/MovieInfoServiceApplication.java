@@ -1,4 +1,4 @@
-package com.systa.reactive.movie.info.service;
+package com.systa.reactive.movie.info;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

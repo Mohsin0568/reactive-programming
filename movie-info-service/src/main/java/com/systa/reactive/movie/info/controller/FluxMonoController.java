@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.systa.reactive.movie.info.service.controller;
+package com.systa.reactive.movie.info.controller;
 
 import java.time.Duration;
 
