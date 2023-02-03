@@ -1,6 +1,6 @@
 package com.systa.reactive.movie.info.controller;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -17,6 +17,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.systa.reactive.movie.info.domain.MovieInfo;
 import com.systa.reactive.movie.info.repository.MovieInfoRepository;
+
+import reactor.test.StepVerifier;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -70,5 +72,80 @@ class MoviesInfoControllerIntgTest {
 			});
 		
 	}
+	
+	@Test
+	void getAllMovieInfosTest() {
+	
+		webTestClient
+			.get()
+			.uri(MOVIES_INFO_URL)
+			.exchange()
+			.expectStatus()
+			.is2xxSuccessful()
+			.expectBodyList(MovieInfo.class)
+			.hasSize(3);
+		
+	}
+	
+	@Test
+	void getAllMovieInfoByIdTest() {
+		
+		String idToFetch = "abc";
+	
+		webTestClient
+			.get()
+			.uri(MOVIES_INFO_URL+"/{id}", idToFetch)
+			.exchange()
+			.expectStatus()
+			.is2xxSuccessful()
+			.expectBody()
+			.jsonPath("$.name", "Heman");
+		
+	}
+	
+	@Test
+	void updateMovieInfoTest() {
+	
+		var movieToUpdate = new MovieInfo(null, "Batman11", "2021", Arrays.asList("abc", "xyz"), LocalDate.parse("2022-05-30"));
+		String idToFetch = "abc";
+		
+		webTestClient
+			.put()
+			.uri(MOVIES_INFO_URL+"/{id}", idToFetch)
+			.bodyValue(movieToUpdate)
+			.exchange()
+			.expectStatus()
+			.is2xxSuccessful()
+			.expectBody(MovieInfo.class)
+			.consumeWith(entityExchangeResult -> {
+				
+				var movieWhichIsUpdated = entityExchangeResult.getResponseBody();
+				assert movieWhichIsUpdated != null;
+				assert movieWhichIsUpdated.getId() != null;
+				assertEquals("Batman11", movieWhichIsUpdated.getName());
+				
+			});
+		
+	}
+	
+	@Test
+	void deleteMovieInfoTest() {
+	
+		String idToFetch = "abc";
+		
+		webTestClient
+			.delete()
+			.uri(MOVIES_INFO_URL+"/{id}", idToFetch)
+			.exchange()
+			.expectStatus()
+			.isNoContent();
+		
+		var flux = movieInfoRepository.findAll().log();
+		StepVerifier.create(flux)
+			.expectNextCount(2)
+			.verifyComplete();
+		
+	}
+	
 
 }
