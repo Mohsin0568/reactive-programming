@@ -129,6 +129,22 @@ class MoviesInfoControllerIntgTest {
 	}
 	
 	@Test
+	void updateMovieInfoTest_whenIdIsInvalid() {
+	
+		var movieToUpdate = new MovieInfo(null, "Batman11", "2021", Arrays.asList("abc", "xyz"), LocalDate.parse("2022-05-30"));
+		String idToFetch = "def";
+		
+		webTestClient
+			.put()
+			.uri(MOVIES_INFO_URL+"/{id}", idToFetch)
+			.bodyValue(movieToUpdate)
+			.exchange()
+			.expectStatus()
+			.isNotFound();
+		
+	}
+	
+	@Test
 	void deleteMovieInfoTest() {
 	
 		String idToFetch = "abc";
