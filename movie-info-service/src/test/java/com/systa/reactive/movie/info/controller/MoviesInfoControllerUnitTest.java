@@ -1,6 +1,5 @@
 package com.systa.reactive.movie.info.controller;
 
-import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +20,6 @@ import com.systa.reactive.movie.info.service.MoviesInfoService;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 
 @WebFluxTest(controllers = MoviesInfoController.class)
@@ -146,6 +144,29 @@ class MoviesInfoControllerUnitTest {
 			.exchange()
 			.expectStatus()
 			.isNoContent();
+		
+	}
+	
+	@Test
+	void addMovieInfoTest_whenNameAndYearIsInvalidInRequest() {
+	
+		var movieToSave = new MovieInfo(null, "", "-1" , Arrays.asList("abc", "xyz"), LocalDate.parse("2022-05-30"));
+		
+		webTestClient
+			.post()
+			.uri(MOVIES_INFO_URL)
+			.bodyValue(movieToSave)
+			.exchange()
+			.expectStatus()
+			.isBadRequest()
+			.expectBody(String.class)
+			.consumeWith(entityExchangeResult -> {
+				var responseBody = entityExchangeResult.getResponseBody();
+				var expectedMessage = "movie.name should not be empty,movie.year should be positive value";
+				
+				assert responseBody != null;
+				assertEquals(expectedMessage, responseBody);
+			});
 		
 	}
 

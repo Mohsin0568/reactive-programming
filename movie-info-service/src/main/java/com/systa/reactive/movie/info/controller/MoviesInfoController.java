@@ -3,6 +3,8 @@
  */
 package com.systa.reactive.movie.info.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +39,7 @@ public class MoviesInfoController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Mono<MovieInfo> addMovieInfo(@RequestBody MovieInfo movieInfo){
+	public Mono<MovieInfo> addMovieInfo(@RequestBody @Valid MovieInfo movieInfo){
 		
 		log.info("Request received for moviesInfo");
 		return movieInfoService.addMovieInfo(movieInfo).log();
