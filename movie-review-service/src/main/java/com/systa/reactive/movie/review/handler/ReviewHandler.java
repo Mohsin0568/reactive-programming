@@ -55,4 +55,10 @@ public class ReviewHandler {
 				.flatMap(ServerResponse.ok() :: bodyValue)
 				);
 	}
+
+	public Mono<ServerResponse> deleteReview(ServerRequest request) {
+	
+		String id = request.pathVariable("id");		
+		return reviewRepository.deleteById(id).then(ServerResponse.noContent().build());
+	}
 }

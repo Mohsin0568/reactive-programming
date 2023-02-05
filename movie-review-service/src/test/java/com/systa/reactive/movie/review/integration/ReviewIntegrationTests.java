@@ -68,7 +68,7 @@ class ReviewIntegrationTests {
 	}
 	
 	@Test
-	void getAllMovieInfosTest() {
+	void getAllMoviesReviewTest() {
 	
 		webTestClient
 			.get()
@@ -82,7 +82,7 @@ class ReviewIntegrationTests {
 	}
 	
 	@Test
-	void updateMovieInfoTest() {
+	void updateMovieReviewTest() {
 	
 		var reviewToUpdate = new Review(null, 1L, "Awesome Movie1", 9.0);
 		String idToFetch = "abc";
@@ -104,6 +104,19 @@ class ReviewIntegrationTests {
 				
 			});
 		
+	}
+	
+	@Test
+	void deleteMovieReviewTest() {
+	
+		String idToFetch = "abc";
+		
+		webTestClient
+			.delete()
+			.uri(REVIEW_INFO_URL+"/{id}", idToFetch)
+			.exchange()
+			.expectStatus()
+			.isNoContent();
 	}
 
 }

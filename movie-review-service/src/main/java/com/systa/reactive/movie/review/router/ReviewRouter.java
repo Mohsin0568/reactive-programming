@@ -26,7 +26,8 @@ public class ReviewRouter {
 				.nest(RequestPredicates.path("/v1/review"), builder -> {
 					builder.GET("", request -> handler.getAllReviews());
 					builder.POST("", handler::saveReveiw);
-					builder.PUT("/{id}", request -> handler.updateReview(request));
+					builder.PUT("/{id}", handler :: updateReview);
+					builder.DELETE("/{id}", handler :: deleteReview);
 				})
 				.GET("/testEndpoint", (request -> ServerResponse.ok().bodyValue("test endpoint")))
 //				.POST("/v1/review", handler::saveReveiw)
