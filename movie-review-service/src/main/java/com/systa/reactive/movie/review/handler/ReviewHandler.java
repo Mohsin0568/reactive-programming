@@ -33,4 +33,9 @@ public class ReviewHandler {
 			.flatMap(ServerResponse.status(HttpStatus.CREATED) :: bodyValue);
 		
 	}
+
+	public Mono<ServerResponse> getAllReviews() {
+		var reviewsFlux = reviewRepository.findAll();
+		return ServerResponse.ok().body(reviewsFlux, Review.class);
+	}
 }

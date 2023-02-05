@@ -25,6 +25,7 @@ public class ReviewRouter {
 				.GET("/testEndpoint", (request -> ServerResponse.ok().bodyValue("test endpoint")))
 				.POST("/v1/review", handler::saveReveiw)
 				//.POST("/v1/review", request -> handler.saveReveiw(request))
+				.GET("/v1/review", request -> handler.getAllReviews())
 				.build();
 	}
 }

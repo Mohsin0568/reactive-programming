@@ -64,5 +64,19 @@ class ReviewIntegrationTests {
 				
 			});
 	}
+	
+	@Test
+	void getAllMovieInfosTest() {
+	
+		webTestClient
+			.get()
+			.uri(REVIEW_INFO_URL)
+			.exchange()
+			.expectStatus()
+			.is2xxSuccessful()
+			.expectBodyList(Review.class)
+			.hasSize(3);
+		
+	}
 
 }
