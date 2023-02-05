@@ -1,5 +1,7 @@
 package com.systa.reactive.movie.review.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -31,7 +33,7 @@ class ReviewIntegrationTests {
 	@BeforeEach
 	void setUp() {
 		var reviewsList = List.of(
-                new Review(null, 1L, "Awesome Movie", 9.0),
+                new Review("abc", 1L, "Awesome Movie", 9.0),
                 new Review(null, 1L, "Awesome Movie1", 9.0),
                 new Review(null, 2L, "Excellent Movie", 8.0));
 		
@@ -76,6 +78,31 @@ class ReviewIntegrationTests {
 			.is2xxSuccessful()
 			.expectBodyList(Review.class)
 			.hasSize(3);
+		
+	}
+	
+	@Test
+	void updateMovieInfoTest() {
+	
+		var reviewToUpdate = new Review(null, 1L, "Awesome Movie1", 9.0);
+		String idToFetch = "abc";
+		
+		webTestClient
+			.put()
+			.uri(REVIEW_INFO_URL+"/{id}", idToFetch)
+			.bodyValue(reviewToUpdate)
+			.exchange()
+			.expectStatus()
+			.is2xxSuccessful()
+			.expectBody(Review.class)
+			.consumeWith(entityExchangeResult -> {
+				
+				var reviewWhichIsUpdated = entityExchangeResult.getResponseBody();
+				assert reviewWhichIsUpdated != null;
+				assert reviewWhichIsUpdated.getReviewId() != null;
+				assertEquals("Awesome Movie1", reviewWhichIsUpdated.getComment());
+				
+			});
 		
 	}
 

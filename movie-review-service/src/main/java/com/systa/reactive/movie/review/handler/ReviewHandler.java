@@ -38,4 +38,21 @@ public class ReviewHandler {
 		var reviewsFlux = reviewRepository.findAll();
 		return ServerResponse.ok().body(reviewsFlux, Review.class);
 	}
+
+	public Mono<ServerResponse> updateReview(ServerRequest request) {
+		String id = request.pathVariable("id");
+		
+		var existingReview = reviewRepository.findById(id);
+		
+		return existingReview.flatMap(review -> 
+				request.bodyToMono(Review.class).map(reqReview ->
+				{
+					review.setComment(reqReview.getComment());
+					review.setRating(reqReview.getRating());
+					return review;
+				})
+				.flatMap(reviewRepository :: save)
+				.flatMap(ServerResponse.ok() :: bodyValue)
+				);
+	}
 }
