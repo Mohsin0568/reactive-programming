@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.systa.reactive.movie.review.domain.Review;
 
+import reactor.core.publisher.Flux;
+
 /**
  * @author mohsin
  *
@@ -15,5 +17,7 @@ import com.systa.reactive.movie.review.domain.Review;
 
 @Repository
 public interface ReviewRepository extends ReactiveMongoRepository<Review, String>{
+	
+	public Flux<Review> findReviewsByMovieInfoId(Long id);
 
 }

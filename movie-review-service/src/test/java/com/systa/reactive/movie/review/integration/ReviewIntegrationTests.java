@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.systa.reactive.movie.review.domain.Review;
 import com.systa.reactive.movie.review.repository.ReviewRepository;
@@ -78,6 +79,25 @@ class ReviewIntegrationTests {
 			.is2xxSuccessful()
 			.expectBodyList(Review.class)
 			.hasSize(3);
+		
+	}
+	
+	@Test
+	void getAllMoviesReviewTestByMovieInfoId() {
+		
+		String uri = UriComponentsBuilder.fromUriString(REVIEW_INFO_URL)
+				.queryParam("movieInfoId", "1")
+				.buildAndExpand()
+				.toUriString();
+	
+		webTestClient
+			.get()
+			.uri(uri)
+			.exchange()
+			.expectStatus()
+			.is2xxSuccessful()
+			.expectBodyList(Review.class)
+			.hasSize(2);
 		
 	}
 	

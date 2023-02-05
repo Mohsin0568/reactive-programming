@@ -24,7 +24,7 @@ public class ReviewRouter {
 	public RouterFunction<ServerResponse> reviewRoutes(ReviewHandler handler){
 		return RouterFunctions.route()
 				.nest(RequestPredicates.path("/v1/review"), builder -> {
-					builder.GET("", request -> handler.getAllReviews());
+					builder.GET("", handler :: getAllReviews);
 					builder.POST("", handler::saveReveiw);
 					builder.PUT("/{id}", handler :: updateReview);
 					builder.DELETE("/{id}", handler :: deleteReview);

@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import com.systa.reactive.movie.review.domain.Review;
 import com.systa.reactive.movie.review.repository.ReviewRepository;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -34,8 +35,16 @@ public class ReviewHandler {
 		
 	}
 
-	public Mono<ServerResponse> getAllReviews() {
-		var reviewsFlux = reviewRepository.findAll();
+	public Mono<ServerResponse> getAllReviews(ServerRequest request) {
+		
+		var movieInfoId = request.queryParam("movieInfoId");
+		Flux<Review> reviewsFlux = null;
+		if(movieInfoId.isPresent()) {
+			reviewsFlux = reviewRepository.findReviewsByMovieInfoId(Long.valueOf(movieInfoId.get()));			
+		}
+		else {		
+			reviewsFlux = reviewRepository.findAll();
+		}
 		return ServerResponse.ok().body(reviewsFlux, Review.class);
 	}
 
