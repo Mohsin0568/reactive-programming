@@ -76,8 +76,8 @@ public class ReviewHandler {
 	public Mono<ServerResponse> updateReview(ServerRequest request) {
 		String id = request.pathVariable("id");
 		
-		var existingReview = reviewRepository.findById(id)
-				.switchIfEmpty(Mono.error(new ReviewNotFoundException("Review not found with id " + id)));
+		var existingReview = reviewRepository.findById(id);
+				//.switchIfEmpty(Mono.error(new ReviewNotFoundException("Review not found with id " + id)));
 		
 		return existingReview.flatMap(review -> 
 				request.bodyToMono(Review.class).map(reqReview ->
@@ -88,7 +88,7 @@ public class ReviewHandler {
 				})
 				.flatMap(reviewRepository :: save)
 				.flatMap(ServerResponse.ok() :: bodyValue)
-				);
+				).switchIfEmpty(ServerResponse.notFound().build());
 	}
 
 	public Mono<ServerResponse> deleteReview(ServerRequest request) {
