@@ -1,6 +1,5 @@
 package com.systa.reactive.movie.review.router;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
@@ -13,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.systa.reactive.movie.review.domain.Review;
+import com.systa.reactive.movie.review.exceptions.GlobalErrorHandler;
 import com.systa.reactive.movie.review.handler.ReviewHandler;
 import com.systa.reactive.movie.review.repository.ReviewRepository;
 
@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 
 
 @WebFluxTest
-@ContextConfiguration(classes = {ReviewRouter.class, ReviewHandler.class})
+@ContextConfiguration(classes = {ReviewRouter.class, ReviewHandler.class, GlobalErrorHandler.class})
 @AutoConfigureWebTestClient
 class ReviewRouterUnitTest {
 	
@@ -54,6 +54,23 @@ class ReviewRouterUnitTest {
 				assert reviewWhichIsSaved.getReviewId() != null;
 				
 			});
+		
+	}
+	
+	@Test
+	void addReviewTest_InvalidData() {
+		
+		var reviewToSave = new Review(null, null, "Chakkas Movie", -10.0);
+		
+		webTestClient
+			.post()
+			.uri(REVIEW_INFO_URL)
+			.bodyValue(reviewToSave)
+			.exchange()
+			.expectStatus()
+			.isBadRequest()
+			.expectBody(String.class)
+			.isEqualTo("movieInfoId should not be null,rating value should be a positive value");		
 		
 	}
 

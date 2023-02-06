@@ -3,6 +3,11 @@
  */
 package com.systa.reactive.movie.review.handler;
 
+import java.util.stream.Collectors;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -10,6 +15,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.systa.reactive.movie.review.domain.Review;
+import com.systa.reactive.movie.review.exceptions.ReviewDataException;
 import com.systa.reactive.movie.review.repository.ReviewRepository;
 
 import reactor.core.publisher.Flux;
@@ -25,14 +31,32 @@ public class ReviewHandler {
 	
 	@Autowired
 	ReviewRepository reviewRepository;
+	
+	@Autowired
+	Validator validator;
 
 	public Mono<ServerResponse> saveReveiw(ServerRequest request) {
 		
 		
 		return request.bodyToMono(Review.class)
+			.doOnNext(this :: validate)
 			.flatMap(reviewRepository :: save)
 			.flatMap(ServerResponse.status(HttpStatus.CREATED) :: bodyValue);
 		
+	}
+	
+	private void validate(Review review) {
+		
+		var setOfConstraintViolations = validator.validate(review);
+		if(!setOfConstraintViolations.isEmpty()) {
+			var errorMessage = setOfConstraintViolations
+			.stream()
+			.map(ConstraintViolation :: getMessage)
+			.sorted()
+			.collect(Collectors.joining(","));
+			
+			throw new ReviewDataException(errorMessage);
+		}
 	}
 
 	public Mono<ServerResponse> getAllReviews(ServerRequest request) {
