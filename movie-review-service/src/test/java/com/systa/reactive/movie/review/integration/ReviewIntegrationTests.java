@@ -127,6 +127,24 @@ class ReviewIntegrationTests {
 	}
 	
 	@Test
+	void updateMovieReviewTest_reviewNotFoundInDB() {
+	
+		var reviewToUpdate = new Review(null, 1L, "Awesome Movie1", 9.0);
+		String idToFetch = "abcdef";
+		
+		webTestClient
+			.put()
+			.uri(REVIEW_INFO_URL+"/{id}", idToFetch)
+			.bodyValue(reviewToUpdate)
+			.exchange()
+			.expectStatus()
+			.isNotFound()
+			.expectBody(String.class)
+			.isEqualTo("Review not found with id abcdef");
+		
+	}
+	
+	@Test
 	void deleteMovieReviewTest() {
 	
 		String idToFetch = "abc";

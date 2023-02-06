@@ -16,6 +16,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.systa.reactive.movie.review.domain.Review;
 import com.systa.reactive.movie.review.exceptions.ReviewDataException;
+import com.systa.reactive.movie.review.exceptions.ReviewNotFoundException;
 import com.systa.reactive.movie.review.repository.ReviewRepository;
 
 import reactor.core.publisher.Flux;
@@ -75,7 +76,8 @@ public class ReviewHandler {
 	public Mono<ServerResponse> updateReview(ServerRequest request) {
 		String id = request.pathVariable("id");
 		
-		var existingReview = reviewRepository.findById(id);
+		var existingReview = reviewRepository.findById(id)
+				.switchIfEmpty(Mono.error(new ReviewNotFoundException("Review not found with id " + id)));
 		
 		return existingReview.flatMap(review -> 
 				request.bodyToMono(Review.class).map(reqReview ->
