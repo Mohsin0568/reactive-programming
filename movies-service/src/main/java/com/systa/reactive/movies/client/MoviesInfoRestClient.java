@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.systa.reactive.movies.domain.MovieInfo;
 import com.systa.reactive.movies.exceptions.MoviesInfoClientException;
+import com.systa.reactive.movies.exceptions.MoviesInfoServerException;
 
 import reactor.core.publisher.Mono;
 
@@ -49,6 +50,15 @@ public class MoviesInfoRestClient {
 						.flatMap(responseBody -> {
 							return Mono.error(
 									new MoviesInfoClientException(responseBody, clientResponse.statusCode().value())
+								);
+						});
+			})
+			.onStatus(HttpStatus :: is5xxServerError, clientResponse -> {
+				
+				return clientResponse.bodyToMono(String.class)
+						.flatMap(responseBody -> {
+							return Mono.error(
+									new MoviesInfoServerException(responseBody)
 								);
 						});
 			})
