@@ -1,15 +1,12 @@
 /**
  * 
  */
-package com.systa.reactive.movies.client;
+package com.systa.reactive.movies.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import com.systa.reactive.movies.exceptions.MoviesInfoClientException;
-import com.systa.reactive.movies.exceptions.MoviesInfoServerException;
 
 import lombok.extern.slf4j.Slf4j;
 
