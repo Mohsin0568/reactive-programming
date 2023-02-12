@@ -33,6 +33,12 @@ public class MoviesInfoRestClient {
 		
 		var url = movieInfoUrl.concat("/{id}");
 		
+//		var retry = Retry.fixedDelay(3, Duration.ofSeconds(1))
+//			.filter(e -> e instanceof MoviesInfoServerException) // retry will happen only if exception is of type MoviesInfoServerException, there is no point of retrying if the exception is of 404
+//			.onRetryExhaustedThrow((retryBackOffSpec, retrySignal) -> { // this line will propagate same exception thrown by the server.
+//				return Exceptions.propagate(retrySignal.failure());
+//			});
+		
 		return webClient
 			.get()
 			.uri(url, movieId)
@@ -63,7 +69,7 @@ public class MoviesInfoRestClient {
 						});
 			})
 			.bodyToMono(MovieInfo.class)
-			.retry(3)
+			.retryWhen(RestUtil.getRetryForMovieInfoService())
 			.log();
 		
 	}
