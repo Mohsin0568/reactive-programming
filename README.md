@@ -5,3 +5,5 @@
 - Have used Spring WebFlux as web framework to build non-blocking applications.
 - Have used MariaDb to store data and its non-blocking API's to connect in a reactive style.
 - Have used WebClient API to connect with other services in a non-blocking style.
+
+![architecture](architecture.png)
